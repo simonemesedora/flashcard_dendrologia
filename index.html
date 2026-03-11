@@ -2,165 +2,645 @@
 <html lang="hu">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dendrológia</title>
 <style>
-body{font-family:Arial,sans-serif;background:linear-gradient(135deg,#11998e,#38ef7d);padding:20px;color:#333}
-.container{max-width:900px;margin:0 auto}
-h1{text-align:center;color:white;margin-bottom:30px}
-.card{background:white;border-radius:15px;padding:30px;margin:20px 0;box-shadow:0 10px 30px rgba(0,0,0,.3);min-height:400px}
-.name-container{text-align:center;margin:20px 0;transition:opacity .3s, transform .3s}
-.name-container.emoji-only .names{display:none}
-.name-container.names-only .emoji{display:none}
-.emoji{font-size:48px;cursor:pointer;transition:transform .2s, opacity .3s}
-.emoji:hover{transform:scale(1.1)}
-.names{font-size:24px;transition:opacity .3s}
-.latin-name{font-weight:bold;color:#333;margin:5px 0}
-.magyar-name{font-size:18px;color:#667eea;font-style:italic;margin:5px 0}
-img{max-width:200px;max-height:200px;margin:10px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.2);cursor:pointer}
-#listView{display:none}
-#listView .collapsible{
-  background:#f1f1f1;color:#333 !important;cursor:pointer;padding:18px;width:100%;border:none;text-align:left;font-size:18px;font-weight:bold;border-radius:8px;margin-bottom:5px;transition:background .3s
+* {
+    box-sizing: border-box;
 }
-#listView .collapsible:hover{
-  background:#ddd;color:#000 !important
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    padding: 20px;
+    color: #333;
+    margin: 0;
 }
-#listView .plant-content{display:none;padding:0 18px;max-height:0;overflow:hidden;transition:max-height .3s ease-out}
-#listView .plant-content.show{display:block;max-height:1000px}
-#listView .photo-links{display:flex;flex-wrap:wrap;gap:10px;padding:10px 0}
-#listView .photo-links img{max-width:120px;max-height:120px}
-button{padding:12px 24px;margin:5px;border:none;border-radius:8px;background:#11998e;color:white;cursor:pointer;font-size:16px;transition:background .2s}
-button:hover{background:#0f8b7e}
-#progress{text-align:center;color:white;font-size:18px;font-weight:bold;margin:10px 0}
-.reveal-btn{background:#28a745 !important}
-.list-btn{background:#17a2b8 !important}
-.back-btn{background:#6c757d !important}
-.hidden{display:none !important}
-.clickable { cursor: pointer; }
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+h1 {
+    text-align: center;
+    color: white;
+    margin-bottom: 24px;
+}
+
+.card {
+    background: white;
+    border-radius: 18px;
+    padding: 24px;
+    margin: 20px 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+}
+
+.name-container {
+    text-align: center;
+    margin: 10px 0 22px 0;
+    transition: opacity .3s, transform .3s;
+}
+
+.name-container.emoji-only .names {
+    display: none;
+}
+
+.name-container.names-only .emoji {
+    display: none;
+}
+
+.emoji {
+    font-size: 52px;
+    cursor: pointer;
+    transition: transform .2s, opacity .3s;
+}
+
+.emoji:hover {
+    transform: scale(1.08);
+}
+
+.names {
+    font-size: 24px;
+    transition: opacity .3s;
+}
+
+.latin-name {
+    font-weight: bold;
+    color: #222;
+    margin: 5px 0;
+    font-size: 28px;
+}
+
+.magyar-name {
+    font-size: 19px;
+    color: #667eea;
+    font-style: italic;
+    margin: 5px 0;
+}
+
+#progress {
+    text-align: center;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 10px 0 14px 0;
+}
+
+#flashButtons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+button {
+    padding: 12px 22px;
+    border: none;
+    border-radius: 10px;
+    background: #11998e;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background .2s, transform .15s;
+}
+
+button:hover {
+    background: #0f8b7e;
+    transform: translateY(-1px);
+}
+
+.reveal-btn {
+    background: #28a745 !important;
+}
+
+.list-btn {
+    background: #17a2b8 !important;
+}
+
+.back-btn {
+    background: #6c757d !important;
+    margin-bottom: 12px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+#listView {
+    display: none;
+}
+
+#images {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    align-items: stretch;
+}
+
+.flash-img {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.18);
+    cursor: pointer;
+    display: block;
+    transition: transform .18s ease, box-shadow .18s ease;
+    background: #f3f3f3;
+}
+
+.flash-img:hover {
+    transform: scale(1.01);
+    box-shadow: 0 8px 18px rgba(0,0,0,.22);
+}
+
+#listView .collapsible {
+    background: #f1f1f1;
+    color: #333;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 10px;
+    margin-bottom: 6px;
+    transition: background .25s;
+}
+
+#listView .collapsible:hover {
+    background: #ddd;
+    color: #000;
+}
+
+#listView .plant-content {
+    display: none;
+    padding: 0 4px 10px 4px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .3s ease-out;
+}
+
+#listView .plant-content.show {
+    display: block;
+    max-height: 3000px;
+}
+
+#listView .photo-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    padding: 12px 0 16px 0;
+}
+
+#listView .photo-links img {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,.18);
+}
+
+.lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.92);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px 70px;
+}
+
+.lightbox.show {
+    display: flex;
+}
+
+.lightbox-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lightbox-img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 10px;
+    box-shadow: 0 8px 30px rgba(0,0,0,.45);
+    object-fit: contain;
+}
+
+.lightbox-btn,
+.lightbox-close {
+    position: absolute;
+    border: none;
+    color: white;
+    background: rgba(255,255,255,0.14);
+    backdrop-filter: blur(4px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.lightbox-btn {
+    top: 50%;
+    transform: translateY(-50%);
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    font-size: 28px;
+}
+
+.lightbox-btn:hover,
+.lightbox-close:hover {
+    background: rgba(255,255,255,0.24);
+}
+
+.lightbox-prev {
+    left: 10px;
+}
+
+.lightbox-next {
+    right: 10px;
+}
+
+.lightbox-close {
+    top: 10px;
+    right: 10px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    font-size: 28px;
+    line-height: 1;
+}
+
+.lightbox-caption {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 12px;
+    color: white;
+    text-align: center;
+    background: rgba(0,0,0,.45);
+    padding: 10px 14px;
+    border-radius: 10px;
+    max-width: min(92vw, 900px);
+    font-size: 15px;
+}
+
+.lightbox-counter {
+    display: block;
+    opacity: .85;
+    margin-top: 4px;
+    font-size: 13px;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 12px;
+    }
+
+    .card {
+        padding: 16px;
+        border-radius: 14px;
+    }
+
+    .latin-name {
+        font-size: 24px;
+    }
+
+    .magyar-name {
+        font-size: 17px;
+    }
+
+    #images {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .flash-img {
+        width: 100%;
+        height: min(42vh, 340px);
+        max-height: 340px;
+        border-radius: 12px;
+    }
+
+    #listView .photo-links {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    #listView .photo-links img {
+        height: 140px;
+    }
+
+    .lightbox {
+        padding: 16px 10px 70px 10px;
+    }
+
+    .lightbox-btn {
+        width: 46px;
+        height: 46px;
+        font-size: 24px;
+        top: auto;
+        bottom: 10px;
+        transform: none;
+    }
+
+    .lightbox-prev {
+        left: calc(50% - 60px);
+    }
+
+    .lightbox-next {
+        right: calc(50% - 60px);
+    }
+
+    .lightbox-close {
+        top: 8px;
+        right: 8px;
+        width: 44px;
+        height: 44px;
+        font-size: 26px;
+    }
+
+    .lightbox-caption {
+        bottom: 62px;
+        width: calc(100% - 20px);
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .flash-img {
+        height: min(46vh, 360px);
+    }
+
+    #listView .photo-links {
+        grid-template-columns: 1fr;
+    }
+
+    #listView .photo-links img {
+        height: 180px;
+    }
+}
 </style>
 </head>
 <body>
 <div class="container">
-<h1>🌳 Dendrológia - 63 növény</h1>
-<div id="progress">1 / 63</div>
-<div id="flashButtons">
-<button onclick="prev()">⬅️ Előző</button>
-<button id="revealBtn" onclick="revealToggle()">🔍 Név megmutatása</button>
-<button onclick="next()">Következő ➡️</button>
-<button onclick="shuffle()">🎲 Kever</button>
-<button id="listBtn" class="list-btn" onclick="showList()">📋 Lista</button>
-</div>
-<div id="card" class="card">
-  <div class="name-container emoji-only" id="nameContainer">
-    <div class="emoji" onclick="revealToggle()">🌳</div>
-    <div class="names clickable" id="names" onclick="revealToggle()">
-      <div class="latin-name" id="latin"></div>
-      <div class="magyar-name" id="magyar"></div>
+    <h1>🌳 Dendrológia - 63 növény</h1>
+
+    <div id="progress">1 / 63</div>
+
+    <div id="flashButtons">
+        <button onclick="prev()">⬅️ Előző</button>
+        <button id="revealBtn" onclick="revealToggle()">🔍 Név mutatása</button>
+        <button onclick="next()">Következő ➡️</button>
+        <button onclick="shuffle()">🎲 Kever</button>
+        <button id="listBtn" class="list-btn" onclick="showList()">📋 Lista</button>
     </div>
-  </div>
-  <div id="images"></div>
+
+    <div id="card" class="card">
+        <div class="name-container emoji-only" id="nameContainer">
+            <div class="emoji" onclick="revealToggle()">🌳</div>
+            <div class="names clickable" id="names" onclick="revealToggle()">
+                <div class="latin-name" id="latin"></div>
+                <div class="magyar-name" id="magyar"></div>
+            </div>
+        </div>
+        <div id="images"></div>
+    </div>
+
+    <div id="listView" class="card">
+        <button class="back-btn" onclick="showFlashcard()">← Vissza a kártyákhoz</button>
+        <h2>📋 Növény lista</h2>
+        <div id="plantList"></div>
+    </div>
 </div>
-<div id="listView" class="card">
-  <button class="back-btn" onclick="showFlashcard()">← Vissza a kártyákhoz</button>
-  <h2>📋 Növény lista</h2>
-  <div id="plantList"></div>
+
+<div id="lightbox" class="lightbox" aria-hidden="true">
+    <div class="lightbox-content">
+        <button class="lightbox-close" onclick="closeLightbox()" aria-label="Bezárás">×</button>
+        <button class="lightbox-btn lightbox-prev" onclick="prevLightbox()" aria-label="Előző kép">❮</button>
+        <img id="lightboxImg" class="lightbox-img" src="" alt="">
+        <button class="lightbox-btn lightbox-next" onclick="nextLightbox()" aria-label="Következő kép">❯</button>
+        <div class="lightbox-caption" id="lightboxCaption"></div>
+    </div>
 </div>
-</div>
+
 <script>
-const plants = [{"latin": "Juniperus Communis Suecica", "magyar": "k\u00f6z\u00f6ns\u00e9ges bor\u00f3ka 'Suecica'", "images": ["Juniperus communis 'Suecica' 03.jpg", "Juniperus communis 'Suecica' 02.jpg", "Juniperus communis 'Suecica' 01.jpg", "Juniperus communis 'Suecica' 05.jpg", "Juniperus communis 'Suecica' 04.jpg", "Juniperus communis 'Suecica' 06.jpg"]}, {"latin": "Picea Pungens", "magyar": "sz\u00far\u00f3s lucfeny\u0151 / ez\u00fcstfeny\u0151", "images": ["Picea pungens 01.jpg", "Picea pungens 02.jpg", "Picea pungens 03.jpg", "Picea pungens 07.jpg", "Picea pungens 12.jpg", "Picea pungens 06.jpg", "Picea pungens 10.jpg", "Picea pungens 04.jpg", "Picea pungens 05.jpg", "Picea pungens 11.jpg", "Picea pungens 08.jpg", "Picea pungens 09.jpg"]}, {"latin": "Juniperus Virginiana", "magyar": "virginiai bor\u00f3ka", "images": ["Juniperus virginiana 02.jpg", "Juniperus virginiana 03.jpg", "Juniperus virginiana 01.jpg", "Juniperus virginiana 04.jpg", "Juniperus virginiana 05.jpg", "Juniperus virginiana 07.jpg", "Juniperus virginiana 06.jpg", "Juniperus virginiana 08.jpg", "Juniperus virginiana 09.jpg"]}, {"latin": "Chamaecyparis Lawsoniana Ellwoodii", "magyar": "oregoni hamisciprus 'Ellwoodii'", "images": ["Chamaecyparis lawsoniana 'Ellwoodii' 05.jpg", "Chamaecyparis lawsoniana 'Ellwoodii' 04.jpg", "Chamaecyparis lawsoniana 'Ellwoodii' 03.jpg", "Chamaecyparis lawsoniana 'Ellwoodii' 02.jpg", "Chamaecyparis lawsoniana 'Ellwoodii' 01.jpg"]}, {"latin": "Cedrus Libani Subsp. Atlantica", "magyar": "atlaszc\u00e9drus", "images": ["Cedrus libani subsp. atlantica 08.jpg", "Cedrus libani subsp. atlantica 20.jpg", "Cedrus libani subsp. atlantica 21.jpg", "Cedrus libani subsp. atlantica 09.jpg", "Cedrus libani subsp. atlantica 19.jpg", "Cedrus libani subsp. atlantica 18.jpg", "Cedrus libani subsp. atlantica 15.jpg", "Cedrus libani subsp. atlantica 01.jpg", "Cedrus libani subsp. atlantica 14.jpg", "Cedrus libani subsp. atlantica 02.jpg", "Cedrus libani subsp. atlantica 16.jpg", "Cedrus libani subsp. atlantica 17.jpg", "Cedrus libani subsp. atlantica 03.jpg", "Cedrus libani subsp. atlantica 07.jpg", "Cedrus libani subsp. atlantica 13.jpg", "Cedrus libani subsp. atlantica 12.jpg", "Cedrus libani subsp. atlantica 06.jpg", "Cedrus libani subsp. atlantica 10.jpg", "Cedrus libani subsp. atlantica 04.jpg", "Cedrus libani subsp. atlantica 05.jpg", "Cedrus libani subsp. atlantica 11.jpg"]}, {"latin": "Sequoiadendron Giganteum", "magyar": "\u00f3ri\u00e1s mamutfeny\u0151", "images": ["Sequoiadendron giganteum 02.jpg", "Sequoiadendron giganteum 03.jpg", "Sequoiadendron giganteum 01.jpg", "Sequoiadendron giganteum 04.jpg", "Sequoiadendron giganteum 05.jpg", "Sequoiadendron giganteum 07.jpg", "Sequoiadendron giganteum 06.jpg"]}, {"latin": "Picea Abies", "magyar": "k\u00f6z\u00f6ns\u00e9ges lucfeny\u0151", "images": ["Picea abies 07.jpg", "Picea abies 06.jpg", "Picea abies 10.jpg", "Picea abies 04.jpg", "Picea abies 05.jpg", "Picea abies 01.jpg", "Picea abies 02.jpg", "Picea abies 03.jpg", "Picea abies 08.jpg", "Picea abies 09.jpg"]}, {"latin": "Thuja Occidentalis Europe Gold", "magyar": "nyugati tuja 'Europe Gold'", "images": ["Thuja occidentalis 'Europe Gold' 05.jpg", "Thuja occidentalis 'Europe Gold' 04.jpg", "Thuja occidentalis 'Europe Gold' 06.jpg", "Thuja occidentalis 'Europe Gold' 07.jpg", "Thuja occidentalis 'Europe Gold' 03.jpg", "Thuja occidentalis 'Europe Gold' 02.jpg", "Thuja occidentalis 'Europe Gold' 01.jpg"]}, {"latin": "Juniperus Sabina Tamariscifolia", "magyar": "szagos bor\u00f3ka 'Tamariscifolia'", "images": ["Juniperus sabina 'Tamariscifolia' 09.jpg", "Juniperus sabina 'Tamariscifolia' 08.jpg", "Juniperus sabina 'Tamariscifolia' 01.jpg", "Juniperus sabina 'Tamariscifolia' 03.jpg", "Juniperus sabina 'Tamariscifolia' 02.jpg", "Juniperus sabina 'Tamariscifolia' 06.jpg", "Juniperus sabina 'Tamariscifolia' 07.jpg", "Juniperus sabina 'Tamariscifolia' 05.jpg", "Juniperus sabina 'Tamariscifolia' 10.jpg", "Juniperus sabina 'Tamariscifolia' 04.jpg"]}, {"latin": "Juniperus Virginiana Tripartita", "magyar": "virginiai bor\u00f3ka 'Tripartita'", "images": ["Juniperus virginiana 'Tripartita' 02.jpg", "Juniperus virginiana 'Tripartita' 03.jpg", "Juniperus virginiana 'Tripartita' 01.jpg", "Juniperus virginiana 'Tripartita' 04.jpg", "Juniperus virginiana 'Tripartita' 05.jpg", "Juniperus virginiana 'Tripartita' 07.jpg", "Juniperus virginiana 'Tripartita' 06.jpg", "Juniperus virginiana 'Tripartita' 08.jpg", "Juniperus virginiana 'Tripartita' 09.jpg"]}, {"latin": "Platycladus Orientalis Aurea", "magyar": "keleti tuja 'Aurea'", "images": ["Platycladus orientalis 'Aurea'.jpg"]}, {"latin": "Taxus Baccata Overeynderi", "magyar": "tiszafa 'Overeynderi'", "images": ["Taxus baccata 'Overeynderi' 05.jpg", "Taxus baccata 'Overeynderi' 04.jpg", "Taxus baccata 'Overeynderi' 06.jpg", "Taxus baccata 'Overeynderi' 03.jpg", "Taxus baccata 'Overeynderi' 02.jpg", "Taxus baccata 'Overeynderi' 01.jpg"]}, {"latin": "Ginkgo Biloba", "magyar": "p\u00e1fr\u00e1nyfeny\u0151 / gink\u00f3", "images": ["Ginkgo biloba 28.jpg", "Ginkgo biloba 14.jpg", "Ginkgo biloba 15.jpg", "Ginkgo biloba 01.jpg", "Ginkgo biloba 29.jpg", "Ginkgo biloba 17.jpg", "Ginkgo biloba 03.jpg", "Ginkgo biloba 02.jpg", "Ginkgo biloba 16.jpg", "Ginkgo biloba 12.jpg", "Ginkgo biloba 06.jpg", "Ginkgo biloba 07.jpg", "Ginkgo biloba 13.jpg", "Ginkgo biloba 05.jpg", "Ginkgo biloba 11.jpg", "Ginkgo biloba 10.jpg", "Ginkgo biloba 04.jpg", "Ginkgo biloba 09.jpg", "Ginkgo biloba 21.jpg", "Ginkgo biloba 34.jpg", "Ginkgo biloba 20.jpg", "Ginkgo biloba 08.jpg", "Ginkgo biloba 22.jpg", "Ginkgo biloba 23.jpg", "Ginkgo biloba 33.jpg", "Ginkgo biloba 27.jpg", "Ginkgo biloba 26.jpg", "Ginkgo biloba 32.jpg", "Ginkgo biloba 24.jpg", "Ginkgo biloba 30.jpg", "Ginkgo biloba 18.jpg", "Ginkgo biloba 19.jpg", "Ginkgo biloba 31.jpg", "Ginkgo biloba 25.jpg"]}, {"latin": "Thuja Occidentalis Smaragd", "magyar": "nyugati tuja 'Smaragd'", "images": ["Thuja occidentalis 'Smaragd' 06.jpg", "Thuja occidentalis 'Smaragd' 07.jpg", "Thuja occidentalis 'Smaragd' 05.jpg", "Thuja occidentalis 'Smaragd' 04.jpg", "Thuja occidentalis 'Smaragd' 10.jpg", "Thuja occidentalis 'Smaragd' 01.jpg", "Thuja occidentalis 'Smaragd' 03.jpg", "Thuja occidentalis 'Smaragd' 02.jpg", "Thuja occidentalis 'Smaragd' 09.jpg", "Thuja occidentalis 'Smaragd' 08.jpg"]}, {"latin": "Thuja Occidentalis Golden Globe", "magyar": "nyugati tuja 'Golden Globe'", "images": ["Thuja occidentalis 'Golden Globe' 06.jpg", "Thuja occidentalis 'Golden Globe' 07.jpg", "Thuja occidentalis 'Golden Globe' 05.jpg", "Thuja occidentalis 'Golden Globe' 10.jpg", "Thuja occidentalis 'Golden Globe' 04.jpg", "Thuja occidentalis 'Golden Globe' 01.jpg", "Thuja occidentalis 'Golden Globe' 03.jpg", "Thuja occidentalis 'Golden Globe' 02.jpg", "Thuja occidentalis 'Golden Globe' 09.jpg", "Thuja occidentalis 'Golden Globe' 08.jpg"]}, {"latin": "Juniperus Sabina", "magyar": "nep\u00e1li bor\u00f3ka / szagos bor\u00f3ka", "images": ["Juniperus sabina 04.jpg", "Juniperus sabina 02.jpg", "Juniperus sabina 03.jpg", "Juniperus sabina 01.jpg"]}, {"latin": "Pinus Wallichiana", "magyar": "himal\u00e1jai selyemfeny\u0151", "images": ["Pinus wallichiana 06.jpg", "Pinus wallichiana 12.jpg", "Pinus wallichiana 13.jpg", "Pinus wallichiana 07.jpg", "Pinus wallichiana 11.jpg", "Pinus wallichiana 05.jpg", "Pinus wallichiana 04.jpg", "Pinus wallichiana 10.jpg", "Pinus wallichiana 14.jpg", "Pinus wallichiana 01.jpg", "Pinus wallichiana 15.jpg", "Pinus wallichiana 03.jpg", "Pinus wallichiana 17.jpg", "Pinus wallichiana 16.jpg", "Pinus wallichiana 02.jpg", "Pinus wallichiana 18.jpg", "Pinus wallichiana 19.jpg", "Pinus wallichiana 09.jpg", "Pinus wallichiana 08.jpg", "Pinus wallichiana 20.jpg"]}, {"latin": "Abies Nordmanniana", "magyar": "kauk\u00e1zusi jegenyefeny\u0151 / nordmann feny\u0151", "images": ["Abies nordmanniana 01.jpg", "Abies nordmanniana 03.jpg", "Abies nordmanniana 02.jpg", "Abies nordmanniana 06.jpg", "Abies nordmanniana 07.jpg", "Abies nordmanniana 11.jpg", "Abies nordmanniana 05.jpg", "Abies nordmanniana 04.jpg", "Abies nordmanniana 10.jpg", "Abies nordmanniana 09.jpg", "Abies nordmanniana 08.jpg"]}, {"latin": "Picea Pungens Koster", "magyar": "sz\u00far\u00f3s lucfeny\u0151 'Koster'", "images": ["Picea pungens 'Koster' 01.jpg", "Picea pungens 'Koster' 03.jpg", "Picea pungens 'Koster' 02.jpg", "Picea pungens 'Koster' 04.jpg"]}, {"latin": "Juniperus Scopulorum Skyrocket", "magyar": "hegyi bor\u00f3ka 'Skyrocket'", "images": ["Juniperus scopulorum 'Skyrocket' 01.jpg", "Juniperus scopulorum 'Skyrocket' 03.jpg", "Juniperus scopulorum 'Skyrocket' 02.jpg", "Juniperus scopulorum 'Skyrocket' 06.jpg", "Juniperus scopulorum 'Skyrocket' 05.jpg", "Juniperus scopulorum 'Skyrocket' 04.jpg"]}, {"latin": "Chamaecyparis Lawsoniana Stardust", "magyar": "oregoni hamisciprus 'Stardust'", "images": ["Chamaecyparis lawsoniana 'Stardust'.jpg"]}, {"latin": "Abies Koreana", "magyar": "koreai jegenyefeny\u0151", "images": ["Abies koreana 09.jpg", "Abies koreana 08.jpg", "Abies koreana 06.jpg", "Abies koreana 12.jpg", "Abies koreana 13.jpg", "Abies koreana 07.jpg", "Abies koreana 11.jpg", "Abies koreana 05.jpg", "Abies koreana 04.jpg", "Abies koreana 10.jpg", "Abies koreana 14.jpg", "Abies koreana 01.jpg", "Abies koreana 15.jpg", "Abies koreana 03.jpg", "Abies koreana 17.jpg", "Abies koreana 16.jpg", "Abies koreana 02.jpg"]}, {"latin": "Picea Pungens Glauca", "magyar": "sz\u00far\u00f3s lucfeny\u0151 'Glauca'", "images": ["Picea pungens 'Glauca'.jpg"]}, {"latin": "Larix Decidua", "magyar": "eur\u00f3pai v\u00f6r\u00f6sfeny\u0151", "images": ["Larix decidua 09.jpg", "Larix decidua 08.jpg", "Larix decidua 05.jpg", "Larix decidua 11.jpg", "Larix decidua 10.jpg", "Larix decidua 04.jpg", "Larix decidua 12.jpg", "Larix decidua 06.jpg", "Larix decidua 07.jpg", "Larix decidua 03.jpg", "Larix decidua 02.jpg", "Larix decidua 01.jpg"]}, {"latin": "X Cupressocyparis Leylandii Haggerston Grey", "magyar": "lejlandi ciprus 'Haggerston Grey'", "images": ["x Cupressocyparis leylandii 'Haggerston_Grey' 07.jpg", "x Cupressocyparis leylandii 'Haggerston Grey' 01.jpg", "x Cupressocyparis leylandii 'Haggerston Grey' 02.jpg", "x Cupressocyparis leylandii 'Haggerston Grey' 03.jpg", "x Cupressocyparis leylandii 'Haggerston Grey' 06.jpg", "x Cupressocyparis leylandii 'Haggerston Grey' 04.jpg", "x Cupressocyparis leylandii 'Haggerston Grey' 05.jpg"]}, {"latin": "Metasequoia Glyptostroboides", "magyar": "k\u00ednai mamutfeny\u0151 / \u0151sfeny\u0151", "images": ["Metasequoia glyptostroboides 09.jpg", "Metasequoia glyptostroboides 20.jpg", "Metasequoia glyptostroboides 08.jpg", "Metasequoia glyptostroboides 18.jpg", "Metasequoia glyptostroboides 19.jpg", "Metasequoia glyptostroboides 14.jpg", "Metasequoia glyptostroboides 01.jpg", "Metasequoia glyptostroboides 15.jpg", "Metasequoia glyptostroboides 03.jpg", "Metasequoia glyptostroboides 17.jpg", "Metasequoia glyptostroboides 16.jpg", "Metasequoia glyptostroboides 02.jpg", "Metasequoia glyptostroboides 06.jpg", "Metasequoia glyptostroboides 12.jpg", "Metasequoia glyptostroboides 13.jpg", "Metasequoia glyptostroboides 07.jpg", "Metasequoia glyptostroboides 11.jpg", "Metasequoia glyptostroboides 05.jpg", "Metasequoia glyptostroboides 04.jpg", "Metasequoia glyptostroboides 10.jpg"]}, {"latin": "Taxus X Media Hicksii", "magyar": "kerti tiszafa 'Hicksii'", "images": ["Taxus x media 'Hicksii' 03.jpg", "Taxus x media 'Hicksii' 02.jpg", "Taxus x media 'Hicksii' 01.jpg", "Taxus x media 'Hicksii' 05.jpg", "Taxus x media 'Hicksii' 04.jpg"]}, {"latin": "Abies Concolor", "magyar": "kolor\u00e1d\u00f3i jegenyefeny\u0151", "images": ["Abies concolor 08.jpg", "Abies concolor 09.jpg", "Abies concolor 01.jpg", "Abies concolor 02.jpg", "Abies concolor 03.jpg", "Abies concolor 07.jpg", "Abies concolor 06.jpg", "Abies concolor 10.jpg", "Abies concolor 04.jpg", "Abies concolor 05.jpg", "Abies concolor 11.jpg"]}, {"latin": "Pseudotsuga Menziesii Var Glauca", "magyar": "duglaszfeny\u0151 'Glauca'", "images": ["Pseudotsuga menziesii var glauca 01.jpg", "Pseudotsuga menziesii var glauca 15.jpg", "Pseudotsuga menziesii var glauca 14.jpg", "Pseudotsuga menziesii var glauca 16.jpg", "Pseudotsuga menziesii var glauca 02.jpg", "Pseudotsuga menziesii var glauca 03.jpg", "Pseudotsuga menziesii var glauca 17.jpg", "Pseudotsuga menziesii var glauca 13.jpg", "Pseudotsuga menziesii var glauca 07.jpg", "Pseudotsuga menziesii var glauca 06.jpg", "Pseudotsuga menziesii var glauca 12.jpg", "Pseudotsuga menziesii var glauca 04.jpg", "Pseudotsuga menziesii var glauca 10.jpg", "Pseudotsuga menziesii var glauca 11.jpg", "Pseudotsuga menziesii var glauca 05.jpg", "Pseudotsuga menziesii var glauca 08.jpg", "Pseudotsuga menziesii var glauca 09.jpg", "Pseudotsuga menziesii var glauca 18.jpg"]}, {"latin": "Taxus Baccata", "magyar": "tiszafa", "images": ["Taxus baccata 01.jpg", "Taxus baccata 15.jpg", "Taxus baccata 14.jpg", "Taxus baccata 02.jpg", "Taxus baccata 03.jpg", "Taxus baccata 13.jpg", "Taxus baccata 07.jpg", "Taxus baccata 06.jpg", "Taxus baccata 12.jpg", "Taxus baccata 04.jpg", "Taxus baccata 10.jpg", "Taxus baccata 11.jpg", "Taxus baccata 05.jpg", "Taxus baccata 08.jpg", "Taxus baccata 09.jpg"]}, {"latin": "Juniperus Chinensis", "magyar": "k\u00ednai bor\u00f3ka", "images": ["Juniperus chinensis 01.jpg", "Juniperus chinensis 02.jpg", "Juniperus chinensis 03.jpg", "Juniperus chinensis 04.jpg"]}, {"latin": "Pinus Sylvestris", "magyar": "erdei feny\u0151", "images": ["Pinus sylvestris 18.jpg", "Pinus sylvestris 19.jpg", "Pinus sylvestris 09.jpg", "Pinus sylvestris 08.jpg", "Pinus sylvestris 20.jpg", "Pinus sylvestris 11.jpg", "Pinus sylvestris 05.jpg", "Pinus sylvestris 04.jpg", "Pinus sylvestris 10.jpg", "Pinus sylvestris 06.jpg", "Pinus sylvestris 12.jpg", "Pinus sylvestris 13.jpg", "Pinus sylvestris 07.jpg", "Pinus sylvestris 03.jpg", "Pinus sylvestris 17.jpg", "Pinus sylvestris 16.jpg", "Pinus sylvestris 02.jpg", "Pinus sylvestris 14.jpg", "Pinus sylvestris 01.jpg", "Pinus sylvestris 15.jpg"]}, {"latin": "Taxodium Distichum", "magyar": "mocs\u00e1rciprus", "images": ["Taxodium distichum 04.jpg", "Taxodium distichum 10.jpg", "Taxodium distichum 11.jpg", "Taxodium distichum 05.jpg", "Taxodium distichum 13.jpg", "Taxodium distichum 07.jpg", "Taxodium distichum 06.jpg", "Taxodium distichum 12.jpg", "Taxodium distichum 16.jpg", "Taxodium distichum 02.jpg", "Taxodium distichum 03.jpg", "Taxodium distichum 17.jpg", "Taxodium distichum 01.jpg", "Taxodium distichum 15.jpg", "Taxodium distichum 29.jpg", "Taxodium distichum 28.jpg", "Taxodium distichum 14.jpg", "Taxodium distichum 19.jpg", "Taxodium distichum 25.jpg", "Taxodium distichum 24.jpg", "Taxodium distichum 18.jpg", "Taxodium distichum 26.jpg", "Taxodium distichum 27.jpg", "Taxodium distichum 23.jpg", "Taxodium distichum 22.jpg", "Taxodium distichum 20.jpg", "Taxodium distichum 08.jpg", "Taxodium distichum 09.jpg", "Taxodium distichum 21.jpg"]}, {"latin": "Cedrus Libani", "magyar": "libanoni c\u00e9drus", "images": ["Cedrus libani 03.jpg", "Cedrus libani 02.jpg", "Cedrus libani 01.jpg", "Cedrus libani 05.jpg", "Cedrus libani 04.jpg", "Cedrus libani 10.jpg", "Cedrus libani 06.jpg", "Cedrus libani 07.jpg", "Cedrus libani 09.jpg", "Cedrus libani 08.jpg"]}, {"latin": "Pinus Mugo", "magyar": "havasi t\u00f6rpefeny\u0151 / hegyi feny\u0151", "images": ["Pinus mugo 08.jpg", "Pinus mugo 09.jpg", "Pinus mugo 01.jpg", "Pinus mugo 02.jpg", "Pinus mugo 03.jpg", "Pinus mugo 07.jpg", "Pinus mugo 06.jpg", "Pinus mugo 10.jpg", "Pinus mugo 04.jpg", "Pinus mugo 05.jpg"]}, {"latin": "Platycladus Orientalis", "magyar": "keleti tuja / k\u00ednai \u00e9letfa", "images": ["Platycladus orientalis 09.jpg", "Platycladus orientalis 08.jpg", "Platycladus orientalis 01.jpg", "Platycladus orientalis 03.jpg", "Platycladus orientalis 02.jpg", "Platycladus orientalis 06.jpg", "Platycladus orientalis 07.jpg", "Platycladus orientalis 11.jpg", "Platycladus orientalis 05.jpg", "Platycladus orientalis 04.jpg", "Platycladus orientalis 10.jpg"]}, {"latin": "Pinus Nigra", "magyar": "fekete feny\u0151 / osztr\u00e1k feny\u0151", "images": ["Pinus nigra 14.jpg", "Pinus nigra 28.jpg", "Pinus nigra 15.jpg", "Pinus nigra 01.jpg", "Pinus nigra 17.jpg", "Pinus nigra 03.jpg", "Pinus nigra 02.jpg", "Pinus nigra 16.jpg", "Pinus nigra 12.jpg", "Pinus nigra 06.jpg", "Pinus nigra 07.jpg", "Pinus nigra 13.jpg", "Pinus nigra 05.jpg", "Pinus nigra 11.jpg", "Pinus nigra 10.jpg", "Pinus nigra 04.jpg", "Pinus nigra 21.jpg", "Pinus nigra 09.jpg", "Pinus nigra 08.jpg", "Pinus nigra 20.jpg", "Pinus nigra 22.jpg", "Pinus nigra 23.jpg", "Pinus nigra 27.jpg", "Pinus nigra 26.jpg", "Pinus nigra 18.jpg", "Pinus nigra 24.jpg", "Pinus nigra 25.jpg", "Pinus nigra 19.jpg"]}, {"latin": "Juniperus Sabina Tiszakrt", "magyar": "szagos bor\u00f3ka 'Tiszakrt'", "images": ["Juniperus sabina 'tiszakrt' 03.jpg", "Juniperus sabina 'tiszakrt' 02.jpg", "Juniperus sabina 'tiszakrt' 01.jpg", "Juniperus sabina 'tiszakrt' 05.jpg", "Juniperus sabina 'tiszakrt' 04.jpg"]}, {"latin": "Chamaecyparis Lawsoniana", "magyar": "oregoni hamisciprus", "images": ["Chamaecyparis lawsoniana 05.jpg", "Chamaecyparis lawsoniana 04.jpg", "Chamaecyparis lawsoniana 06.jpg", "Chamaecyparis lawsoniana 07.jpg", "Chamaecyparis lawsoniana 03.jpg", "Chamaecyparis lawsoniana 02.jpg", "Chamaecyparis lawsoniana 01.jpg"]}, {"latin": "Juniperus Communis", "magyar": "k\u00f6z\u00f6ns\u00e9ges bor\u00f3ka", "images": ["Juniperus communis.jpg"]}, {"latin": "Picea Pungens Hoopsii", "magyar": "sz\u00far\u00f3s lucfeny\u0151 'Hoopsii'", "images": ["Picea pungens 'Hoopsii' 08.jpg", "Picea pungens 'Hoopsii' 01.jpg", "Picea pungens 'Hoopsii' 03.jpg", "Picea pungens 'Hoopsii' 02.jpg", "Picea pungens 'Hoopsii' 06.jpg", "Picea pungens 'Hoopsii' 07.jpg", "Picea pungens 'Hoopsii' 05.jpg", "Picea pungens 'Hoopsii' 04.jpg"]}, {"latin": "Picea Omorika", "magyar": "szerb lucfeny\u0151", "images": ["Picea omorika 09.jpg", "Picea omorika 08.jpg", "Picea omorika 03.jpg", "Picea omorika 02.jpg", "Picea omorika 16.jpg", "Picea omorika 14.jpg", "Picea omorika 15.jpg", "Picea omorika 01.jpg", "Picea omorika 05.jpg", "Picea omorika 11.jpg", "Picea omorika 10.jpg", "Picea omorika 04.jpg", "Picea omorika 12.jpg", "Picea omorika 06.jpg", "Picea omorika 07.jpg", "Picea omorika 13.jpg"]}, {"latin": "Juniperus Squamata Blue Carpet", "magyar": "pikkelyes bor\u00f3ka 'Blue Carpet'", "images": ["Juniperus squamata 'Blue Carpet' 08.jpg", "Juniperus squamata 'Blue Carpet' 02.jpg", "Juniperus squamata 'Blue Carpet' 03.jpg", "Juniperus squamata 'Blue Carpet' 01.jpg", "Juniperus squamata 'Blue Carpet' 04.jpg", "Juniperus squamata 'Blue Carpet' 05.jpg", "Juniperus squamata 'Blue Carpet' 07.jpg", "Juniperus squamata 'Blue Carpet' 06.jpg"]}, {"latin": "Taxus Baccata Fastigiata Aurea", "magyar": "tiszafa 'Fastigiata Aurea'", "images": ["Taxus baccata 'Fastigiata Aurea'.jpg"]}, {"latin": "Chamaecyparis Lawsoniana Lvr", "magyar": "oregoni hamisciprus 'LVR'", "images": ["Chamaecyparis lawsoniana 'lvr' 04.jpg", "Chamaecyparis lawsoniana 'lvr' 01.jpg", "Chamaecyparis lawsoniana 'lvr' 03.jpg", "Chamaecyparis lawsoniana 'lvr' 02.jpg"]}, {"latin": "Thuja Plicata", "magyar": "\u00f3ri\u00e1s tuja / \u00f3ri\u00e1s \u00e9letfa", "images": ["Thuja plicata 08.jpg", "Thuja plicata 09.jpg", "Thuja plicata 13.jpg", "Thuja plicata 07.jpg", "Thuja plicata 06.jpg", "Thuja plicata 12.jpg", "Thuja plicata 04.jpg", "Thuja plicata 10.jpg", "Thuja plicata 11.jpg", "Thuja plicata 05.jpg", "Thuja plicata 01.jpg", "Thuja plicata 02.jpg", "Thuja plicata 03.jpg"]}, {"latin": "Juniperus X Media Pfitzeriana Aurea", "magyar": "kerti bor\u00f3ka 'Pfitzeriana Aurea'", "images": ["Juniperus x media 'Pfitzeriana Aurea' 08.jpg", "Juniperus x media 'Pfitzeriana Aurea' 09.jpg", "Juniperus x media 'Pfitzeriana Aurea' 04.jpg", "Juniperus x media 'Pfitzeriana Aurea' 10.jpg", "Juniperus x media 'Pfitzeriana Aurea' 05.jpg", "Juniperus x media 'Pfitzeriana Aurea' 07.jpg", "Juniperus x media 'Pfitzeriana Aurea' 06.jpg", "Juniperus x media 'Pfitzeriana Aurea' 02.jpg", "Juniperus x media 'Pfitzeriana Aurea' 03.jpg", "Juniperus x media 'Pfitzeriana Aurea' 01.jpg"]}, {"latin": "Pinus Strobus", "magyar": "keleti feh\u00e9r feny\u0151 / simafeny\u0151", "images": ["Pinus strobus 08.jpg", "Pinus strobus 05.jpg", "Pinus strobus 04.jpg", "Pinus strobus 06.jpg", "Pinus strobus 07.jpg", "Pinus strobus 03.jpg", "Pinus strobus 02.jpg", "Pinus strobus 01.jpg"]}, {"latin": "Thuja Occidentalis Malonyana", "magyar": "nyugati tuja 'Malonyana'", "images": ["Thuja occidentalis 'Malonyana' 04.jpg", "Thuja occidentalis 'Malonyana' 05.jpg", "Thuja occidentalis 'Malonyana' 07.jpg", "Thuja occidentalis 'Malonyana' 06.jpg", "Thuja occidentalis 'Malonyana' 02.jpg", "Thuja occidentalis 'Malonyana' 03.jpg", "Thuja occidentalis 'Malonyana' 01.jpg"]}, {"latin": "Juniperus Virginiana Pseudocupressus", "magyar": "virginiai bor\u00f3ka 'Pseudocupressus'", "images": ["Juniperus virginiana 'Pseudocupressus' 03.jpg", "Juniperus virginiana 'Pseudocupressus' 02.jpg", "Juniperus virginiana 'Pseudocupressus' 01.jpg", "Juniperus virginiana 'Pseudocupressus' 05.jpg", "Juniperus virginiana 'Pseudocupressus' 04.jpg", "Juniperus virginiana 'Pseudocupressus' 06.jpg", "Juniperus virginiana 'Pseudocupressus' 07.jpg"]}, {"latin": "Cupressus Arizonica", "magyar": "ariz\u00f3nai ciprus", "images": ["Cupressus arizonica 06.jpg", "Cupressus arizonica 04.jpg", "Cupressus arizonica 05.jpg", "Cupressus arizonica 01.jpg", "Cupressus arizonica 02.jpg", "Cupressus arizonica 03.jpg"]}, {"latin": "Chamaecyparis Lawsoniana Globus", "magyar": "oregoni hamisciprus 'Globus'", "images": ["Chamaecyparis lawsoniana 'Globus' 02.jpg", "Chamaecyparis lawsoniana 'Globus' 03.jpg", "Chamaecyparis lawsoniana 'Globus' 01.jpg"]}, {"latin": "Juniperus Virginiana Grey Owl", "magyar": "virginiai bor\u00f3ka 'Grey Owl'", "images": ["Juniperus virginiana 'Grey Owl' 04.jpg", "Juniperus virginiana 'Grey Owl' 02.jpg", "Juniperus virginiana 'Grey Owl' 03.jpg", "Juniperus virginiana 'Grey Owl' 01.jpg"]}, {"latin": "Chamaecyparis Lawsoniana Columnaris", "magyar": "oregoni hamisciprus 'Columnaris'", "images": ["Chamaecyparis lawsoniana 'Columnaris' 03.jpg", "Chamaecyparis lawsoniana 'Columnaris' 02.jpg", "Chamaecyparis lawsoniana 'Columnaris' 01.jpg"]}, {"latin": "Juniperus Chinensis Blaauw", "magyar": "k\u00ednai bor\u00f3ka 'Blaauw'", "images": ["Juniperus chinensis 'Blaauw' 02.jpg", "Juniperus chinensis 'Blaauw' 03.jpg", "Juniperus chinensis 'Blaauw' 01.jpg", "Juniperus chinensis 'Blaauw' 04.jpg", "Juniperus chinensis 'Blaauw' 05.jpg"]}, {"latin": "Picea Glauca Conica", "magyar": "feh\u00e9r lucfeny\u0151 'Conica'", "images": ["Picea glauca 'Conica' 04.jpg", "Picea glauca 'Conica' 05.jpg", "Picea glauca 'Conica' 02.jpg", "Picea glauca 'Conica' 03.jpg", "Picea glauca 'Conica' 01.jpg"]}, {"latin": "Taxus Baccata Fastigiata", "magyar": "tiszafa 'Fastigiata'", "images": ["Taxus baccata 'Fastigiata' 03.jpg", "Taxus baccata 'Fastigiata' 02.jpg", "Taxus baccata 'Fastigiata' 01.jpg", "Taxus baccata 'Fastigiata' 04.jpg"]}, {"latin": "Thuja Occidentalis Columna", "magyar": "nyugati tuja 'Columna'", "images": ["Thuja occidentalis 'Columna' 03.jpg", "Thuja occidentalis 'Columna' 02.jpg", "Thuja occidentalis 'Columna' 01.jpg", "Thuja occidentalis 'Columna' 04.jpg"]}, {"latin": "Juniperus Communis Hibernica", "magyar": "k\u00f6z\u00f6ns\u00e9ges bor\u00f3ka 'Hibernica'", "images": ["Juniperus communis 'Hibernica' 04.jpg", "Juniperus communis 'Hibernica' 02.jpg", "Juniperus communis 'Hibernica' 03.jpg", "Juniperus communis 'Hibernica' 01.jpg"]}, {"latin": "Cedrus Libani Subsp. Atlantica Glauca", "magyar": "atlaszc\u00e9drus 'Glauca'", "images": ["Cedrus libani subsp. atlantica 'Glauca' 01.jpg", "Cedrus libani subsp. atlantica 'Glauca' 02.jpg"]}, {"latin": "Juniperus Communis Bakony", "magyar": "k\u00f6z\u00f6ns\u00e9ges bor\u00f3ka 'Bakony'", "images": ["Juniperus communis 'Bakony' 01.jpg", "Juniperus communis 'Bakony' 02.jpg"]}, {"latin": "Thuja Occidentalis Danica", "magyar": "nyugati tuja 'Danica'", "images": ["Thuja occidentalis 'Danica' 01.jpg", "Thuja occidentalis 'Danica' 02.jpg", "Thuja occidentalis 'Danica' 03.jpg"]}, {"latin": "Thuja Occidentalis", "magyar": "nyugati tuja / nyugati \u00e9letfa", "images": ["Thuja occidentalis.jpg"]}];
-let idx=0,isRevealed=false,view='flashcard';
+const plants = [{"latin_raw": "abies concolor", "latin": "Abies Concolor", "magyar": "kolorádói jegenyefenyő", "images": ["Abies concolor 08.jpg", "Abies concolor 09.jpg", "Abies concolor 01.jpg", "Abies concolor 02.jpg", "Abies concolor 03.jpg", "Abies concolor 07.jpg", "Abies concolor 06.jpg", "Abies concolor 10.jpg", "Abies concolor 04.jpg", "Abies concolor 05.jpg", "Abies concolor 11.jpg"]}, {"latin_raw": "abies koreana", "latin": "Abies Koreana", "magyar": "koreai jegenyefenyő", "images": ["Abies koreana 09.jpg", "Abies koreana 08.jpg", "Abies koreana 06.jpg", "Abies koreana 12.jpg", "Abies koreana 13.jpg", "Abies koreana 07.jpg", "Abies koreana 11.jpg", "Abies koreana 05.jpg", "Abies koreana 04.jpg", "Abies koreana 10.jpg", "Abies koreana 14.jpg", "Abies koreana 01.jpg", "Abies koreana 15.jpg", "Abies koreana 03.jpg", "Abies koreana 17.jpg", "Abies koreana 16.jpg", "Abies koreana 02.jpg"]}, {"latin_raw": "abies nordmanniana", "latin": "Abies Nordmanniana", "magyar": "kaukázusi jegenyefenyő / nordmann fenyő", "images": ["Abies nordmanniana 01.jpg", "Abies nordmanniana 03.jpg", "Abies nordmanniana 02.jpg", "Abies nordmanniana 06.jpg", "Abies nordmanniana 07.jpg", "Abies nordmanniana 11.jpg", "Abies nordmanniana 05.jpg", "Abies nordmanniana 04.jpg", "Abies nordmanniana 10.jpg", "Abies nordmanniana 09.jpg", "Abies nordmanniana 08.jpg"]}, {"latin_raw": "cedrus libani", "latin": "Cedrus Libani", "magyar": "libanoni cédrus", "images": ["Cedrus libani 03.jpg", "Cedrus libani 02.jpg", "Cedrus libani 01.jpg", "Cedrus libani 05.jpg", "Cedrus libani 04.jpg", "Cedrus libani 10.jpg", "Cedrus libani 06.jpg", "Cedrus libani 07.jpg", "Cedrus libani 09.jpg", "Cedrus libani 08.jpg"]}, {"latin_raw": "cedrus libani subsp. atlantica", "latin": "Cedrus Libani Subsp. Atlantica", "magyar": "atlaszcédrus", "images": ["Cedrus libani subsp. atlantica 08.jpg", "Cedrus libani subsp. atlantica 20.jpg", "Cedrus libani subsp. atlantica 21.jpg", "Cedrus libani subsp. atlantica 09.jpg", "Cedrus libani subsp. atlantica 19.jpg", "Cedrus libani subsp. atlantica 18.jpg", "Cedrus libani subsp. atlantica 15.jpg", "Cedrus libani subsp. atlantica 01.jpg", "Cedrus libani subsp. atlantica 14.jpg", "Cedrus libani subsp. atlantica 02.jpg", "Cedrus libani subsp. atlantica 16.jpg", "Cedrus libani subsp. atlantica 17.jpg", "Cedrus libani subsp. atlantica 03.jpg", "Cedrus libani subsp. atlantica 07.jpg", "Cedrus libani subsp. atlantica 13.jpg", "Cedrus libani subsp. atlantica 12.jpg", "Cedrus libani subsp. atlantica 06.jpg", "Cedrus libani subsp. atlantica 10.jpg", "Cedrus libani subsp. atlantica 04.jpg", "Cedrus libani subsp. atlantica 05.jpg", "Cedrus libani subsp. atlantica 11.jpg"]}, {"latin_raw": "cedrus libani subsp. atlantica glauca", "latin": "Cedrus Libani Subsp. Atlantica Glauca", "magyar": "atlaszcédrus 'Glauca'", "images": ["Cedrus libani subsp. atlantica 'Glauca' 01.jpg", "Cedrus libani subsp. atlantica 'Glauca' 02.jpg"]}, {"latin_raw": "chamaecyparis lawsoniana", "latin": "Chamaecyparis Lawsoniana", "magyar": "oregoni hamisciprus", "images": ["Chamaecyparis lawsoniana 05.jpg", "Chamaecyparis lawsoniana 04.jpg", "Chamaecyparis lawsoniana 06.jpg", "Chamaecyparis lawsoniana 07.jpg", "Chamaecyparis lawsoniana 03.jpg", "Chamaecyparis lawsoniana 02.jpg", "Chamaecyparis lawsoniana 01.jpg"]}, {"latin_raw": "chamaecyparis lawsoniana columnaris", "latin": "Chamaecyparis Lawsoniana Columnaris", "magyar": "oregoni hamisciprus 'Columnaris'", "images": ["Chamaecyparis lawsoniana 'Columnaris' 03.jpg", "Chamaecyparis lawsoniana 'Columnaris' 02.jpg", "Chamaecyparis lawsoniana 'Columnaris' 01.jpg"]}, {"latin_raw": "chamaecyparis lawsoniana ellwoodii", "latin": "Chamaecyparis Lawsoniana Ellwoodii", "magyar": "oregoni hamisciprus 'Ellwoodii'", "images": ["Chamaecyparis lawsoniana 'Ellwoodii' 05.jpg", "Chamaecyparis lawsoniana 'Ellwoodii' 04.jpg", "Chamaecyparis lawsoniana 'Ellwoodii' 03.jpg", "Chamaecyparis lawsoniana 'Ellwoodii' 02.jpg", "Chamaecyparis lawsoniana 'Ellwoodii' 01.jpg"]}, {"latin_raw": "chamaecyparis lawsoniana globus", "latin": "Chamaecyparis Lawsoniana Globus", "magyar": "oregoni hamisciprus 'Globus'", "images": ["Chamaecyparis lawsoniana 'Globus' 02.jpg", "Chamaecyparis lawsoniana 'Globus' 03.jpg", "Chamaecyparis lawsoniana 'Globus' 01.jpg"]}, {"latin_raw": "chamaecyparis lawsoniana lvr", "latin": "Chamaecyparis Lawsoniana Lvr", "magyar": "oregoni hamisciprus 'LVR'", "images": ["Chamaecyparis lawsoniana 'lvr' 04.jpg", "Chamaecyparis lawsoniana 'lvr' 01.jpg", "Chamaecyparis lawsoniana 'lvr' 03.jpg", "Chamaecyparis lawsoniana 'lvr' 02.jpg"]}, {"latin_raw": "chamaecyparis lawsoniana stardust", "latin": "Chamaecyparis Lawsoniana Stardust", "magyar": "oregoni hamisciprus 'Stardust'", "images": ["Chamaecyparis lawsoniana 'Stardust'.jpg"]}, {"latin_raw": "cupressus arizonica", "latin": "Cupressus Arizonica", "magyar": "arizónai ciprus", "images": ["Cupressus arizonica 06.jpg", "Cupressus arizonica 04.jpg", "Cupressus arizonica 05.jpg", "Cupressus arizonica 01.jpg", "Cupressus arizonica 02.jpg", "Cupressus arizonica 03.jpg"]}, {"latin_raw": "ginkgo biloba", "latin": "Ginkgo Biloba", "magyar": "páfrányfenyő / ginkó", "images": ["Ginkgo biloba 28.jpg", "Ginkgo biloba 14.jpg", "Ginkgo biloba 15.jpg", "Ginkgo biloba 01.jpg", "Ginkgo biloba 29.jpg", "Ginkgo biloba 17.jpg", "Ginkgo biloba 03.jpg", "Ginkgo biloba 02.jpg", "Ginkgo biloba 16.jpg", "Ginkgo biloba 12.jpg", "Ginkgo biloba 06.jpg", "Ginkgo biloba 07.jpg", "Ginkgo biloba 13.jpg", "Ginkgo biloba 05.jpg", "Ginkgo biloba 11.jpg", "Ginkgo biloba 10.jpg", "Ginkgo biloba 04.jpg", "Ginkgo biloba 09.jpg", "Ginkgo biloba 21.jpg", "Ginkgo biloba 34.jpg", "Ginkgo biloba 20.jpg", "Ginkgo biloba 08.jpg", "Ginkgo biloba 22.jpg", "Ginkgo biloba 23.jpg", "Ginkgo biloba 33.jpg", "Ginkgo biloba 27.jpg", "Ginkgo biloba 26.jpg", "Ginkgo biloba 32.jpg", "Ginkgo biloba 24.jpg", "Ginkgo biloba 30.jpg", "Ginkgo biloba 18.jpg", "Ginkgo biloba 19.jpg", "Ginkgo biloba 31.jpg", "Ginkgo biloba 25.jpg"]}, {"latin_raw": "juniperus chinensis", "latin": "Juniperus Chinensis", "magyar": "kínai boróka", "images": ["Juniperus chinensis 01.jpg", "Juniperus chinensis 02.jpg", "Juniperus chinensis 03.jpg", "Juniperus chinensis 04.jpg"]}, {"latin_raw": "juniperus chinensis blaauw", "latin": "Juniperus Chinensis Blaauw", "magyar": "kínai boróka 'Blaauw'", "images": ["Juniperus chinensis 'Blaauw' 02.jpg", "Juniperus chinensis 'Blaauw' 03.jpg", "Juniperus chinensis 'Blaauw' 01.jpg", "Juniperus chinensis 'Blaauw' 04.jpg", "Juniperus chinensis 'Blaauw' 05.jpg"]}, {"latin_raw": "juniperus communis", "latin": "Juniperus Communis", "magyar": "közönséges boróka", "images": ["Juniperus communis.jpg"]}, {"latin_raw": "juniperus communis bakony", "latin": "Juniperus Communis Bakony", "magyar": "közönséges boróka 'Bakony'", "images": ["Juniperus communis 'Bakony' 01.jpg", "Juniperus communis 'Bakony' 02.jpg"]}, {"latin_raw": "juniperus communis hibernica", "latin": "Juniperus Communis Hibernica", "magyar": "közönséges boróka 'Hibernica'", "images": ["Juniperus communis 'Hibernica' 04.jpg", "Juniperus communis 'Hibernica' 02.jpg", "Juniperus communis 'Hibernica' 03.jpg", "Juniperus communis 'Hibernica' 01.jpg"]}, {"latin_raw": "juniperus communis suecica", "latin": "Juniperus Communis Suecica", "magyar": "közönséges boróka 'Suecica'", "images": ["Juniperus communis 'Suecica' 03.jpg", "Juniperus communis 'Suecica' 02.jpg", "Juniperus communis 'Suecica' 01.jpg", "Juniperus communis 'Suecica' 05.jpg", "Juniperus communis 'Suecica' 04.jpg", "Juniperus communis 'Suecica' 06.jpg"]}, {"latin_raw": "juniperus sabina", "latin": "Juniperus Sabina", "magyar": "nepáli boróka / szagos boróka", "images": ["Juniperus sabina 04.jpg", "Juniperus sabina 02.jpg", "Juniperus sabina 03.jpg", "Juniperus sabina 01.jpg"]}, {"latin_raw": "juniperus sabina tamariscifolia", "latin": "Juniperus Sabina Tamariscifolia", "magyar": "szagos boróka 'Tamariscifolia'", "images": ["Juniperus sabina 'Tamariscifolia' 09.jpg", "Juniperus sabina 'Tamariscifolia' 08.jpg", "Juniperus sabina 'Tamariscifolia' 01.jpg", "Juniperus sabina 'Tamariscifolia' 03.jpg", "Juniperus sabina 'Tamariscifolia' 02.jpg", "Juniperus sabina 'Tamariscifolia' 06.jpg", "Juniperus sabina 'Tamariscifolia' 07.jpg", "Juniperus sabina 'Tamariscifolia' 05.jpg", "Juniperus sabina 'Tamariscifolia' 10.jpg", "Juniperus sabina 'Tamariscifolia' 04.jpg"]}, {"latin_raw": "juniperus sabina tiszakrt", "latin": "Juniperus Sabina Tiszakrt", "magyar": "szagos boróka 'Tiszakrt'", "images": ["Juniperus sabina 'tiszakrt' 03.jpg", "Juniperus sabina 'tiszakrt' 02.jpg", "Juniperus sabina 'tiszakrt' 01.jpg", "Juniperus sabina 'tiszakrt' 05.jpg", "Juniperus sabina 'tiszakrt' 04.jpg"]}, {"latin_raw": "juniperus scopulorum skyrocket", "latin": "Juniperus Scopulorum Skyrocket", "magyar": "hegyi boróka 'Skyrocket'", "images": ["Juniperus scopulorum 'Skyrocket' 01.jpg", "Juniperus scopulorum 'Skyrocket' 03.jpg", "Juniperus scopulorum 'Skyrocket' 02.jpg", "Juniperus scopulorum 'Skyrocket' 06.jpg", "Juniperus scopulorum 'Skyrocket' 05.jpg", "Juniperus scopulorum 'Skyrocket' 04.jpg"]}, {"latin_raw": "juniperus squamata blue carpet", "latin": "Juniperus Squamata Blue Carpet", "magyar": "pikkelyes boróka 'Blue Carpet'", "images": ["Juniperus squamata 'Blue Carpet' 08.jpg", "Juniperus squamata 'Blue Carpet' 02.jpg", "Juniperus squamata 'Blue Carpet' 03.jpg", "Juniperus squamata 'Blue Carpet' 01.jpg", "Juniperus squamata 'Blue Carpet' 04.jpg", "Juniperus squamata 'Blue Carpet' 05.jpg", "Juniperus squamata 'Blue Carpet' 07.jpg", "Juniperus squamata 'Blue Carpet' 06.jpg"]}, {"latin_raw": "juniperus virginiana", "latin": "Juniperus Virginiana", "magyar": "virginiai boróka", "images": ["Juniperus virginiana 02.jpg", "Juniperus virginiana 03.jpg", "Juniperus virginiana 01.jpg", "Juniperus virginiana 04.jpg", "Juniperus virginiana 05.jpg", "Juniperus virginiana 07.jpg", "Juniperus virginiana 06.jpg", "Juniperus virginiana 08.jpg", "Juniperus virginiana 09.jpg"]}, {"latin_raw": "juniperus virginiana grey owl", "latin": "Juniperus Virginiana Grey Owl", "magyar": "virginiai boróka 'Grey Owl'", "images": ["Juniperus virginiana 'Grey Owl' 04.jpg", "Juniperus virginiana 'Grey Owl' 02.jpg", "Juniperus virginiana 'Grey Owl' 03.jpg", "Juniperus virginiana 'Grey Owl' 01.jpg"]}, {"latin_raw": "juniperus virginiana pseudocupressus", "latin": "Juniperus Virginiana Pseudocupressus", "magyar": "virginiai boróka 'Pseudocupressus'", "images": ["Juniperus virginiana 'Pseudocupressus' 03.jpg", "Juniperus virginiana 'Pseudocupressus' 02.jpg", "Juniperus virginiana 'Pseudocupressus' 01.jpg", "Juniperus virginiana 'Pseudocupressus' 05.jpg", "Juniperus virginiana 'Pseudocupressus' 04.jpg", "Juniperus virginiana 'Pseudocupressus' 06.jpg", "Juniperus virginiana 'Pseudocupressus' 07.jpg"]}, {"latin_raw": "juniperus virginiana tripartita", "latin": "Juniperus Virginiana Tripartita", "magyar": "virginiai boróka 'Tripartita'", "images": ["Juniperus virginiana 'Tripartita' 02.jpg", "Juniperus virginiana 'Tripartita' 03.jpg", "Juniperus virginiana 'Tripartita' 01.jpg", "Juniperus virginiana 'Tripartita' 04.jpg", "Juniperus virginiana 'Tripartita' 05.jpg", "Juniperus virginiana 'Tripartita' 07.jpg", "Juniperus virginiana 'Tripartita' 06.jpg", "Juniperus virginiana 'Tripartita' 08.jpg", "Juniperus virginiana 'Tripartita' 09.jpg"]}, {"latin_raw": "juniperus x media pfitzeriana aurea", "latin": "Juniperus X Media Pfitzeriana Aurea", "magyar": "kerti boróka 'Pfitzeriana Aurea'", "images": ["Juniperus x media 'Pfitzeriana Aurea' 08.jpg", "Juniperus x media 'Pfitzeriana Aurea' 09.jpg", "Juniperus x media 'Pfitzeriana Aurea' 04.jpg", "Juniperus x media 'Pfitzeriana Aurea' 10.jpg", "Juniperus x media 'Pfitzeriana Aurea' 05.jpg", "Juniperus x media 'Pfitzeriana Aurea' 07.jpg", "Juniperus x media 'Pfitzeriana Aurea' 06.jpg", "Juniperus x media 'Pfitzeriana Aurea' 02.jpg", "Juniperus x media 'Pfitzeriana Aurea' 03.jpg", "Juniperus x media 'Pfitzeriana Aurea' 01.jpg"]}, {"latin_raw": "larix decidua", "latin": "Larix Decidua", "magyar": "európai vörösfenyő", "images": ["Larix decidua 09.jpg", "Larix decidua 08.jpg", "Larix decidua 05.jpg", "Larix decidua 11.jpg", "Larix decidua 10.jpg", "Larix decidua 04.jpg", "Larix decidua 12.jpg", "Larix decidua 06.jpg", "Larix decidua 07.jpg", "Larix decidua 03.jpg", "Larix decidua 02.jpg", "Larix decidua 01.jpg"]}, {"latin_raw": "metasequoia glyptostroboides", "latin": "Metasequoia Glyptostroboides", "magyar": "kínai mamutfenyő / ősfenyő", "images": ["Metasequoia glyptostroboides 09.jpg", "Metasequoia glyptostroboides 20.jpg", "Metasequoia glyptostroboides 08.jpg", "Metasequoia glyptostroboides 18.jpg", "Metasequoia glyptostroboides 19.jpg", "Metasequoia glyptostroboides 14.jpg", "Metasequoia glyptostroboides 01.jpg", "Metasequoia glyptostroboides 15.jpg", "Metasequoia glyptostroboides 03.jpg", "Metasequoia glyptostroboides 17.jpg", "Metasequoia glyptostroboides 16.jpg", "Metasequoia glyptostroboides 02.jpg", "Metasequoia glyptostroboides 06.jpg", "Metasequoia glyptostroboides 12.jpg", "Metasequoia glyptostroboides 13.jpg", "Metasequoia glyptostroboides 07.jpg", "Metasequoia glyptostroboides 11.jpg", "Metasequoia glyptostroboides 05.jpg", "Metasequoia glyptostroboides 04.jpg", "Metasequoia glyptostroboides 10.jpg"]}, {"latin_raw": "picea abies", "latin": "Picea Abies", "magyar": "közönséges lucfenyő", "images": ["Picea abies 07.jpg", "Picea abies 06.jpg", "Picea abies 10.jpg", "Picea abies 04.jpg", "Picea abies 05.jpg", "Picea abies 01.jpg", "Picea abies 02.jpg", "Picea abies 03.jpg", "Picea abies 08.jpg", "Picea abies 09.jpg"]}, {"latin_raw": "picea glauca conica", "latin": "Picea Glauca Conica", "magyar": "fehér lucfenyő 'Conica'", "images": ["Picea glauca 'Conica' 04.jpg", "Picea glauca 'Conica' 05.jpg", "Picea glauca 'Conica' 02.jpg", "Picea glauca 'Conica' 03.jpg", "Picea glauca 'Conica' 01.jpg"]}, {"latin_raw": "picea omorika", "latin": "Picea Omorika", "magyar": "szerb lucfenyő", "images": ["Picea omorika 09.jpg", "Picea omorika 08.jpg", "Picea omorika 03.jpg", "Picea omorika 02.jpg", "Picea omorika 16.jpg", "Picea omorika 14.jpg", "Picea omorika 15.jpg", "Picea omorika 01.jpg", "Picea omorika 05.jpg", "Picea omorika 11.jpg", "Picea omorika 10.jpg", "Picea omorika 04.jpg", "Picea omorika 12.jpg", "Picea omorika 06.jpg", "Picea omorika 07.jpg", "Picea omorika 13.jpg"]}, {"latin_raw": "picea pungens", "latin": "Picea Pungens", "magyar": "szúrós lucfenyő / ezüstfenyő", "images": ["Picea pungens 01.jpg", "Picea pungens 02.jpg", "Picea pungens 03.jpg", "Picea pungens 07.jpg", "Picea pungens 12.jpg", "Picea pungens 06.jpg", "Picea pungens 10.jpg", "Picea pungens 04.jpg", "Picea pungens 05.jpg", "Picea pungens 11.jpg", "Picea pungens 08.jpg", "Picea pungens 09.jpg"]}, {"latin_raw": "picea pungens glauca", "latin": "Picea Pungens Glauca", "magyar": "szúrós lucfenyő 'Glauca'", "images": ["Picea pungens 'Glauca'.jpg"]}, {"latin_raw": "picea pungens hoopsii", "latin": "Picea Pungens Hoopsii", "magyar": "szúrós lucfenyő 'Hoopsii'", "images": ["Picea pungens 'Hoopsii' 08.jpg", "Picea pungens 'Hoopsii' 01.jpg", "Picea pungens 'Hoopsii' 03.jpg", "Picea pungens 'Hoopsii' 02.jpg", "Picea pungens 'Hoopsii' 06.jpg", "Picea pungens 'Hoopsii' 07.jpg", "Picea pungens 'Hoopsii' 05.jpg", "Picea pungens 'Hoopsii' 04.jpg"]}, {"latin_raw": "picea pungens koster", "latin": "Picea Pungens Koster", "magyar": "szúrós lucfenyő 'Koster'", "images": ["Picea pungens 'Koster' 01.jpg", "Picea pungens 'Koster' 03.jpg", "Picea pungens 'Koster' 02.jpg", "Picea pungens 'Koster' 04.jpg"]}, {"latin_raw": "pinus mugo", "latin": "Pinus Mugo", "magyar": "havasi törpefenyő / hegyi fenyő", "images": ["Pinus mugo 08.jpg", "Pinus mugo 09.jpg", "Pinus mugo 01.jpg", "Pinus mugo 02.jpg", "Pinus mugo 03.jpg", "Pinus mugo 07.jpg", "Pinus mugo 06.jpg", "Pinus mugo 10.jpg", "Pinus mugo 04.jpg", "Pinus mugo 05.jpg"]}, {"latin_raw": "pinus nigra", "latin": "Pinus Nigra", "magyar": "fekete fenyő / osztrák fenyő", "images": ["Pinus nigra 14.jpg", "Pinus nigra 28.jpg", "Pinus nigra 15.jpg", "Pinus nigra 01.jpg", "Pinus nigra 17.jpg", "Pinus nigra 03.jpg", "Pinus nigra 02.jpg", "Pinus nigra 16.jpg", "Pinus nigra 12.jpg", "Pinus nigra 06.jpg", "Pinus nigra 07.jpg", "Pinus nigra 13.jpg", "Pinus nigra 05.jpg", "Pinus nigra 11.jpg", "Pinus nigra 10.jpg", "Pinus nigra 04.jpg", "Pinus nigra 21.jpg", "Pinus nigra 09.jpg", "Pinus nigra 08.jpg", "Pinus nigra 20.jpg", "Pinus nigra 22.jpg", "Pinus nigra 23.jpg", "Pinus nigra 27.jpg", "Pinus nigra 26.jpg", "Pinus nigra 18.jpg", "Pinus nigra 24.jpg", "Pinus nigra 25.jpg", "Pinus nigra 19.jpg"]}, {"latin_raw": "pinus strobus", "latin": "Pinus Strobus", "magyar": "keleti fehér fenyő / simafenyő", "images": ["Pinus strobus 08.jpg", "Pinus strobus 05.jpg", "Pinus strobus 04.jpg", "Pinus strobus 06.jpg", "Pinus strobus 07.jpg", "Pinus strobus 03.jpg", "Pinus strobus 02.jpg", "Pinus strobus 01.jpg"]}, {"latin_raw": "pinus sylvestris", "latin": "Pinus Sylvestris", "magyar": "erdei fenyő", "images": ["Pinus sylvestris 18.jpg", "Pinus sylvestris 19.jpg", "Pinus sylvestris 09.jpg", "Pinus sylvestris 08.jpg", "Pinus sylvestris 20.jpg", "Pinus sylvestris 11.jpg", "Pinus sylvestris 05.jpg", "Pinus sylvestris 04.jpg", "Pinus sylvestris 10.jpg", "Pinus sylvestris 06.jpg", "Pinus sylvestris 12.jpg", "Pinus sylvestris 13.jpg", "Pinus sylvestris 07.jpg", "Pinus sylvestris 03.jpg", "Pinus sylvestris 17.jpg", "Pinus sylvestris 16.jpg", "Pinus sylvestris 02.jpg", "Pinus sylvestris 14.jpg", "Pinus sylvestris 01.jpg", "Pinus sylvestris 15.jpg"]}, {"latin_raw": "pinus wallichiana", "latin": "Pinus Wallichiana", "magyar": "himalájai selyemfenyő", "images": ["Pinus wallichiana 06.jpg", "Pinus wallichiana 12.jpg", "Pinus wallichiana 13.jpg", "Pinus wallichiana 07.jpg", "Pinus wallichiana 11.jpg", "Pinus wallichiana 05.jpg", "Pinus wallichiana 04.jpg", "Pinus wallichiana 10.jpg", "Pinus wallichiana 14.jpg", "Pinus wallichiana 01.jpg", "Pinus wallichiana 15.jpg", "Pinus wallichiana 03.jpg", "Pinus wallichiana 17.jpg", "Pinus wallichiana 16.jpg", "Pinus wallichiana 02.jpg", "Pinus wallichiana 18.jpg", "Pinus wallichiana 19.jpg", "Pinus wallichiana 09.jpg", "Pinus wallichiana 08.jpg", "Pinus wallichiana 20.jpg"]}, {"latin_raw": "platycladus orientalis", "latin": "Platycladus Orientalis", "magyar": "keleti tuja / kínai életfa", "images": ["Platycladus orientalis 09.jpg", "Platycladus orientalis 08.jpg", "Platycladus orientalis 01.jpg", "Platycladus orientalis 03.jpg", "Platycladus orientalis 02.jpg", "Platycladus orientalis 06.jpg", "Platycladus orientalis 07.jpg", "Platycladus orientalis 11.jpg", "Platycladus orientalis 05.jpg", "Platycladus orientalis 04.jpg", "Platycladus orientalis 10.jpg"]}, {"latin_raw": "platycladus orientalis aurea", "latin": "Platycladus Orientalis Aurea", "magyar": "keleti tuja 'Aurea'", "images": ["Platycladus orientalis 'Aurea'.jpg"]}, {"latin_raw": "pseudotsuga menziesii var glauca", "latin": "Pseudotsuga Menziesii Var Glauca", "magyar": "duglaszfenyő 'Glauca'", "images": ["Pseudotsuga menziesii var glauca 01.jpg", "Pseudotsuga menziesii var glauca 15.jpg", "Pseudotsuga menziesii var glauca 14.jpg", "Pseudotsuga menziesii var glauca 16.jpg", "Pseudotsuga menziesii var glauca 02.jpg", "Pseudotsuga menziesii var glauca 03.jpg", "Pseudotsuga menziesii var glauca 17.jpg", "Pseudotsuga menziesii var glauca 13.jpg", "Pseudotsuga menziesii var glauca 07.jpg", "Pseudotsuga menziesii var glauca 06.jpg", "Pseudotsuga menziesii var glauca 12.jpg", "Pseudotsuga menziesii var glauca 04.jpg", "Pseudotsuga menziesii var glauca 10.jpg", "Pseudotsuga menziesii var glauca 11.jpg", "Pseudotsuga menziesii var glauca 05.jpg", "Pseudotsuga menziesii var glauca 08.jpg", "Pseudotsuga menziesii var glauca 09.jpg", "Pseudotsuga menziesii var glauca 18.jpg"]}, {"latin_raw": "sequoiadendron giganteum", "latin": "Sequoiadendron Giganteum", "magyar": "óriás mamutfenyő", "images": ["Sequoiadendron giganteum 02.jpg", "Sequoiadendron giganteum 03.jpg", "Sequoiadendron giganteum 01.jpg", "Sequoiadendron giganteum 04.jpg", "Sequoiadendron giganteum 05.jpg", "Sequoiadendron giganteum 07.jpg", "Sequoiadendron giganteum 06.jpg"]}, {"latin_raw": "taxodium distichum", "latin": "Taxodium Distichum", "magyar": "mocsárciprus", "images": ["Taxodium distichum 04.jpg", "Taxodium distichum 10.jpg", "Taxodium distichum 11.jpg", "Taxodium distichum 05.jpg", "Taxodium distichum 13.jpg", "Taxodium distichum 07.jpg", "Taxodium distichum 06.jpg", "Taxodium distichum 12.jpg", "Taxodium distichum 16.jpg", "Taxodium distichum 02.jpg", "Taxodium distichum 03.jpg", "Taxodium distichum 17.jpg", "Taxodium distichum 01.jpg", "Taxodium distichum 15.jpg", "Taxodium distichum 29.jpg", "Taxodium distichum 28.jpg", "Taxodium distichum 14.jpg", "Taxodium distichum 19.jpg", "Taxodium distichum 25.jpg", "Taxodium distichum 24.jpg", "Taxodium distichum 18.jpg", "Taxodium distichum 26.jpg", "Taxodium distichum 27.jpg", "Taxodium distichum 23.jpg", "Taxodium distichum 22.jpg", "Taxodium distichum 20.jpg", "Taxodium distichum 08.jpg", "Taxodium distichum 09.jpg", "Taxodium distichum 21.jpg"]}, {"latin_raw": "taxus baccata", "latin": "Taxus Baccata", "magyar": "tiszafa", "images": ["Taxus baccata 01.jpg", "Taxus baccata 15.jpg", "Taxus baccata 14.jpg", "Taxus baccata 02.jpg", "Taxus baccata 03.jpg", "Taxus baccata 13.jpg", "Taxus baccata 07.jpg", "Taxus baccata 06.jpg", "Taxus baccata 12.jpg", "Taxus baccata 04.jpg", "Taxus baccata 10.jpg", "Taxus baccata 11.jpg", "Taxus baccata 05.jpg", "Taxus baccata 08.jpg", "Taxus baccata 09.jpg"]}, {"latin_raw": "taxus baccata fastigiata", "latin": "Taxus Baccata Fastigiata", "magyar": "tiszafa 'Fastigiata'", "images": ["Taxus baccata 'Fastigiata' 03.jpg", "Taxus baccata 'Fastigiata' 02.jpg", "Taxus baccata 'Fastigiata' 01.jpg", "Taxus baccata 'Fastigiata' 04.jpg"]}, {"latin_raw": "taxus baccata fastigiata aurea", "latin": "Taxus Baccata Fastigiata Aurea", "magyar": "tiszafa 'Fastigiata Aurea'", "images": ["Taxus baccata 'Fastigiata Aurea'.jpg"]}, {"latin_raw": "taxus baccata overeynderi", "latin": "Taxus Baccata Overeynderi", "magyar": "tiszafa 'Overeynderi'", "images": ["Taxus baccata 'Overeynderi' 05.jpg", "Taxus baccata 'Overeynderi' 04.jpg", "Taxus baccata 'Overeynderi' 06.jpg", "Taxus baccata 'Overeynderi' 03.jpg", "Taxus baccata 'Overeynderi' 02.jpg", "Taxus baccata 'Overeynderi' 01.jpg"]}, {"latin_raw": "taxus x media hicksii", "latin": "Taxus X Media Hicksii", "magyar": "kerti tiszafa 'Hicksii'", "images": ["Taxus x media 'Hicksii' 03.jpg", "Taxus x media 'Hicksii' 02.jpg", "Taxus x media 'Hicksii' 01.jpg", "Taxus x media 'Hicksii' 05.jpg", "Taxus x media 'Hicksii' 04.jpg"]}, {"latin_raw": "thuja occidentalis", "latin": "Thuja Occidentalis", "magyar": "nyugati tuja / nyugati életfa", "images": ["Thuja occidentalis.jpg"]}, {"latin_raw": "thuja occidentalis columna", "latin": "Thuja Occidentalis Columna", "magyar": "nyugati tuja 'Columna'", "images": ["Thuja occidentalis 'Columna' 03.jpg", "Thuja occidentalis 'Columna' 02.jpg", "Thuja occidentalis 'Columna' 01.jpg", "Thuja occidentalis 'Columna' 04.jpg"]}, {"latin_raw": "thuja occidentalis danica", "latin": "Thuja Occidentalis Danica", "magyar": "nyugati tuja 'Danica'", "images": ["Thuja occidentalis 'Danica' 01.jpg", "Thuja occidentalis 'Danica' 02.jpg", "Thuja occidentalis 'Danica' 03.jpg"]}, {"latin_raw": "thuja occidentalis europe gold", "latin": "Thuja Occidentalis Europe Gold", "magyar": "nyugati tuja 'Europe Gold'", "images": ["Thuja occidentalis 'Europe Gold' 05.jpg", "Thuja occidentalis 'Europe Gold' 04.jpg", "Thuja occidentalis 'Europe Gold' 06.jpg", "Thuja occidentalis 'Europe Gold' 07.jpg", "Thuja occidentalis 'Europe Gold' 03.jpg", "Thuja occidentalis 'Europe Gold' 02.jpg", "Thuja occidentalis 'Europe Gold' 01.jpg"]}, {"latin_raw": "thuja occidentalis golden globe", "latin": "Thuja Occidentalis Golden Globe", "magyar": "nyugati tuja 'Golden Globe'", "images": ["Thuja occidentalis 'Golden Globe' 06.jpg", "Thuja occidentalis 'Golden Globe' 07.jpg", "Thuja occidentalis 'Golden Globe' 05.jpg", "Thuja occidentalis 'Golden Globe' 10.jpg", "Thuja occidentalis 'Golden Globe' 04.jpg", "Thuja occidentalis 'Golden Globe' 01.jpg", "Thuja occidentalis 'Golden Globe' 03.jpg", "Thuja occidentalis 'Golden Globe' 02.jpg", "Thuja occidentalis 'Golden Globe' 09.jpg", "Thuja occidentalis 'Golden Globe' 08.jpg"]}, {"latin_raw": "thuja occidentalis malonyana", "latin": "Thuja Occidentalis Malonyana", "magyar": "nyugati tuja 'Malonyana'", "images": ["Thuja occidentalis 'Malonyana' 04.jpg", "Thuja occidentalis 'Malonyana' 05.jpg", "Thuja occidentalis 'Malonyana' 07.jpg", "Thuja occidentalis 'Malonyana' 06.jpg", "Thuja occidentalis 'Malonyana' 02.jpg", "Thuja occidentalis 'Malonyana' 03.jpg", "Thuja occidentalis 'Malonyana' 01.jpg"]}, {"latin_raw": "thuja occidentalis smaragd", "latin": "Thuja Occidentalis Smaragd", "magyar": "nyugati tuja 'Smaragd'", "images": ["Thuja occidentalis 'Smaragd' 06.jpg", "Thuja occidentalis 'Smaragd' 07.jpg", "Thuja occidentalis 'Smaragd' 05.jpg", "Thuja occidentalis 'Smaragd' 04.jpg", "Thuja occidentalis 'Smaragd' 10.jpg", "Thuja occidentalis 'Smaragd' 01.jpg", "Thuja occidentalis 'Smaragd' 03.jpg", "Thuja occidentalis 'Smaragd' 02.jpg", "Thuja occidentalis 'Smaragd' 09.jpg", "Thuja occidentalis 'Smaragd' 08.jpg"]}, {"latin_raw": "thuja plicata", "latin": "Thuja Plicata", "magyar": "óriás tuja / óriás életfa", "images": ["Thuja plicata 08.jpg", "Thuja plicata 09.jpg", "Thuja plicata 13.jpg", "Thuja plicata 07.jpg", "Thuja plicata 06.jpg", "Thuja plicata 12.jpg", "Thuja plicata 04.jpg", "Thuja plicata 10.jpg", "Thuja plicata 11.jpg", "Thuja plicata 05.jpg", "Thuja plicata 01.jpg", "Thuja plicata 02.jpg", "Thuja plicata 03.jpg"]}, {"latin_raw": "x cupressocyparis leylandii haggerston grey", "latin": "X Cupressocyparis Leylandii Haggerston Grey", "magyar": "lejlandi ciprus 'Haggerston Grey'", "images": ["x Cupressocyparis leylandii 'Haggerston_Grey' 07.jpg", "x Cupressocyparis leylandii 'Haggerston Grey' 01.jpg", "x Cupressocyparis leylandii 'Haggerston Grey' 02.jpg", "x Cupressocyparis leylandii 'Haggerston Grey' 03.jpg", "x Cupressocyparis leylandii 'Haggerston Grey' 06.jpg", "x Cupressocyparis leylandii 'Haggerston Grey' 04.jpg", "x Cupressocyparis leylandii 'Haggerston Grey' 05.jpg"]}];
+let idx = 0;
+let isRevealed = false;
+let view = 'flashcard';
+
+let lightboxImages = [];
+let lightboxIndex = 0;
+let lightboxTitle = '';
+
+function imagePath(filename) {
+    return `dendrologia_kepek/${filename}`;
+}
 
 function showFlashcard() {
-  view = 'flashcard';
-  document.getElementById('flashButtons').classList.remove('hidden');
-  document.getElementById('card').style.display = 'block';
-  document.getElementById('listView').style.display = 'none';
-  showCard();
+    view = 'flashcard';
+    document.getElementById('flashButtons').classList.remove('hidden');
+    document.getElementById('card').style.display = 'block';
+    document.getElementById('listView').style.display = 'none';
+    showCard();
 }
 
 function showList() {
-  view = 'list';
-  document.getElementById('flashButtons').classList.add('hidden');
-  document.getElementById('card').style.display = 'none';
-  document.getElementById('listView').style.display = 'block';
-  renderPlantList();
+    view = 'list';
+    document.getElementById('flashButtons').classList.add('hidden');
+    document.getElementById('card').style.display = 'none';
+    document.getElementById('listView').style.display = 'block';
+    renderPlantList();
 }
 
 function renderPlantList() {
-  let html = '';
-  plants.forEach((p, i) => {
-    html += `
-      <button class="collapsible" onclick="toggleCollapsible(this)">
-        ${p.latin} - ${p.magyar}
-      </button>
-      <div class="plant-content">
-        <div class="photo-links">
-          ${p.images.map(img => `<a href="dendrologia_kepek/${img}" target="_blank"><img src="dendrologia_kepek/${img}" alt="${p.latin}"></a>`).join('')}
-        </div>
-      </div>
-    `;
-  });
-  document.getElementById('plantList').innerHTML = html;
+    let html = '';
+    plants.forEach((p, i) => {
+        html += `
+            <button class="collapsible" onclick="toggleCollapsible(this)">
+                ${p.latin} - ${p.magyar}
+            </button>
+            <div class="plant-content">
+                <div class="photo-links">
+                    ${p.images.map((img, imgIndex) => `
+                        <img
+                            src="${imagePath(img)}"
+                            alt="${p.latin}"
+                            onclick="openLightboxByPlant(${i}, ${imgIndex})"
+                            loading="lazy"
+                        >
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    });
+    document.getElementById('plantList').innerHTML = html;
 }
 
 function toggleCollapsible(button) {
-  const content = button.nextElementSibling;
-  content.classList.toggle('show');
+    const content = button.nextElementSibling;
+    content.classList.toggle('show');
 }
 
 function showCard() {
-  const p = plants[idx];
-  document.getElementById('latin').innerHTML = p.latin;
-  document.getElementById('magyar').innerHTML = p.magyar;
-  const imgs = p.images.map(i => `<img src="dendrologia_kepek/` + i + `" alt="` + p.latin + `" onclick="window.open('dendrologia_kepek/` + i + `')">`).join('');
-  document.getElementById('images').innerHTML = imgs;
-  document.getElementById('progress').innerHTML = (idx+1) + ' / ' + plants.length;
-  isRevealed = false;
-  updateCardState();
+    const p = plants[idx];
+    document.getElementById('latin').textContent = p.latin;
+    document.getElementById('magyar').textContent = p.magyar;
+
+    const imgs = p.images.map((img, imgIndex) => `
+        <img
+            class="flash-img"
+            src="${imagePath(img)}"
+            alt="${p.latin}"
+            onclick="openLightboxByPlant(${idx}, ${imgIndex})"
+            loading="lazy"
+        >
+    `).join('');
+
+    document.getElementById('images').innerHTML = imgs || '<p>Nincs kép ehhez a növényhez.</p>';
+    document.getElementById('progress').textContent = `${idx + 1} / ${plants.length}`;
+
+    isRevealed = false;
+    updateCardState();
 }
 
-// ... (revealToggle, updateCardState, next, prev, shuffle unchanged)
 function revealToggle() {
-  isRevealed = !isRevealed;
-  updateCardState();
+    isRevealed = !isRevealed;
+    updateCardState();
 }
 
 function updateCardState() {
-  const container = document.getElementById('nameContainer');
-  const revealBtn = document.getElementById('revealBtn');
-  const emoji = container.querySelector('.emoji');
-  const names = container.querySelector('.names');
-  if (isRevealed) {
-    container.className = 'name-container names-only';
-    names.style.display = 'block';
-    emoji.style.display = 'none';
-    revealBtn.innerHTML = '🙈 Név elrejtése';
-    revealBtn.classList.add('reveal-btn');
-  } else {
-    container.className = 'name-container emoji-only';
-    names.style.display = 'none';
-    emoji.style.display = 'block';
-    revealBtn.innerHTML = '🔍 Név megmutatása';
-    revealBtn.classList.remove('reveal-btn');
-  }
+    const container = document.getElementById('nameContainer');
+    const revealBtn = document.getElementById('revealBtn');
+    const emoji = container.querySelector('.emoji');
+    const names = container.querySelector('.names');
+
+    if (isRevealed) {
+        container.className = 'name-container names-only';
+        names.style.display = 'block';
+        emoji.style.display = 'none';
+        revealBtn.innerHTML = '🙈 Név elrejtése';
+        revealBtn.classList.add('reveal-btn');
+    } else {
+        container.className = 'name-container emoji-only';
+        names.style.display = 'none';
+        emoji.style.display = 'block';
+        revealBtn.innerHTML = '🔍 Név mutatása';
+        revealBtn.classList.remove('reveal-btn');
+    }
 }
 
 function next() {
-  idx = (idx + 1) % plants.length;
-  showCard();
+    idx = (idx + 1) % plants.length;
+    showCard();
 }
+
 function prev() {
-  idx = (idx - 1 + plants.length) % plants.length;
-  showCard();
+    idx = (idx - 1 + plants.length) % plants.length;
+    showCard();
 }
+
 function shuffle() {
-  for(let i = plants.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * i);
-    [plants[i], plants[j]] = [plants[j], plants[i]];
-  }
-  idx = 0;
-  showCard();
+    for (let i = plants.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [plants[i], plants[j]] = [plants[j], plants[i]];
+    }
+    idx = 0;
+    showCard();
 }
+
+function openLightboxByPlant(plantIndex, imageIndex) {
+    const p = plants[plantIndex];
+    lightboxImages = p.images.map(img => imagePath(img));
+    lightboxIndex = imageIndex;
+    lightboxTitle = `${p.latin} — ${p.magyar}`;
+    renderLightbox();
+    document.getElementById('lightbox').classList.add('show');
+    document.getElementById('lightbox').setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+}
+
+function renderLightbox() {
+    const imgEl = document.getElementById('lightboxImg');
+    const captionEl = document.getElementById('lightboxCaption');
+
+    imgEl.src = lightboxImages[lightboxIndex];
+    imgEl.alt = lightboxTitle;
+
+    captionEl.innerHTML = `
+        <div>${lightboxTitle}</div>
+        <span class="lightbox-counter">${lightboxIndex + 1} / ${lightboxImages.length}</span>
+    `;
+}
+
+function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('show');
+    document.getElementById('lightbox').setAttribute('aria-hidden', 'true');
+    document.getElementById('lightboxImg').src = '';
+    document.body.style.overflow = '';
+}
+
+function nextLightbox() {
+    if (!lightboxImages.length) return;
+    lightboxIndex = (lightboxIndex + 1) % lightboxImages.length;
+    renderLightbox();
+}
+
+function prevLightbox() {
+    if (!lightboxImages.length) return;
+    lightboxIndex = (lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length;
+    renderLightbox();
+}
+
+document.getElementById('lightbox').addEventListener('click', function(e) {
+    if (e.target.id === 'lightbox') {
+        closeLightbox();
+    }
+});
+
+document.addEventListener('keydown', function(e) {
+    const lightboxOpen = document.getElementById('lightbox').classList.contains('show');
+
+    if (lightboxOpen) {
+        if (e.key === 'Escape') {
+            closeLightbox();
+        } else if (e.key === 'ArrowRight') {
+            nextLightbox();
+        } else if (e.key === 'ArrowLeft') {
+            prevLightbox();
+        }
+        return;
+    }
+
+    if (view !== 'flashcard') return;
+
+    if (e.key === 'ArrowRight') {
+        next();
+    } else if (e.key === 'ArrowLeft') {
+        prev();
+    } else if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        revealToggle();
+    }
+});
+
 showFlashcard();
 </script>
-</body></html>
+</body>
+</html>
